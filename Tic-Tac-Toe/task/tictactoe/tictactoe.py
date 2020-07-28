@@ -74,28 +74,34 @@ def validate_win_scenarios(tic_tac_toe, input_cells):
     if (check_row(tic_tac_toe) == check_column(tic_tac_toe) == check_diagonal(tic_tac_toe) is None and
             check_anti_diagonal(tic_tac_toe) is None and input_cells.count("X") + input_cells.count("O") == 9):
         print("Draw")
+        return True
     elif (check_row(tic_tac_toe) == check_column(tic_tac_toe) == check_diagonal(tic_tac_toe) is None and
           check_anti_diagonal(tic_tac_toe) is None and input_cells.count("X") + input_cells.count("O") != 9
           and (input_cells.count("X") == input_cells.count("O") or input_cells.count("X") == input_cells.count(
                 "O") + 1)):
-        print("Game not finished")
+        # print("Game not finished")
+        return False
     elif (check_row(tic_tac_toe) == "X" or check_column(tic_tac_toe) == "X" or check_diagonal(tic_tac_toe) == "X"
           or check_anti_diagonal(tic_tac_toe) == "X"):
         print("X wins")
+        return True
     elif (check_row(tic_tac_toe) == "O" or check_column(tic_tac_toe) == "O" or
           check_diagonal(tic_tac_toe) == "O" or check_anti_diagonal(tic_tac_toe) == "O"):
         print("O wins")
+        return True
     elif (check_row(tic_tac_toe) == check_column(tic_tac_toe) == check_diagonal(tic_tac_toe) is None and
           check_anti_diagonal(tic_tac_toe) is None and input_cells.count("X") + input_cells.count("O") != 9
           and (input_cells.count("X") != input_cells.count("O") or input_cells.count("X") != input_cells.count(
                 "O") + 1)):
         print("Impossible")
+        return True
     elif (check_row(tic_tac_toe) == "XO" or check_column(tic_tac_toe) == "XO" or check_diagonal(tic_tac_toe) == "XO"
           or check_anti_diagonal(tic_tac_toe) == "XO"):
         print("Impossible")
+        return True
 
 
-def first_move(board):
+def first_move(board, char):
     x, y = 0, 0
     run = True
     while run:
@@ -113,7 +119,7 @@ def first_move(board):
                 j = x - 1
                 if board[i][j] == "_":
                     # board[i][j] = "X"
-                    board[i] = ["X" if n == j else board[i][n] for n, row in enumerate(board[i]) ]
+                    board[i] = [char if n == j else board[i][n] for n, row in enumerate(board[i]) ]
                     run = False
                     return board
                 else:
@@ -125,10 +131,24 @@ def print_board(board):
     for k in range(len(board)):
         print("|", *board[k], "|", sep=" ")
     print("---------")
-input_cell = input("Enter cells:")
-tic_tac_toe = [input_cell[n:n + 3] for n, row in enumerate(input_cell) if n % 3 == 0]
-print_board(tic_tac_toe)
+
+
+# input_cell = input("Enter cells:")
+# tic_tac_toe_board_1 = [input_cell[n:n + 3] for n, row in enumerate(input_cell) if n % 3 == 0]
+# print(tic_tac_toe_board_1)
+tic_tac_toe_board = [["_","_","_"] for n in range(3)]
+print_board(tic_tac_toe_board)
 # validate_win_scenarios(tic_tac_toe, input_cell)
-modified_board = first_move(tic_tac_toe)
-print_board(modified_board)
+for i in range(9):
+    if i % 2 == 0:
+        str = "X"
+    else:
+        str = "O"
+    modified_board = first_move(tic_tac_toe_board, str)
+    print_board(modified_board)
+    # input_cells = "".join([' '.join([str(c) for c in lst]) for lst in modified_board])
+    input_cells = ''.join([data for ele in modified_board for data in ele])
+    run = validate_win_scenarios(tic_tac_toe_board, input_cells)
+    if run:
+        break
 
