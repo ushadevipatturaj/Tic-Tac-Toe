@@ -1,3 +1,6 @@
+from string import ascii_letters
+
+
 def check_row(cells):
     result1 = ""
     result2 = ""
@@ -66,6 +69,7 @@ def check_anti_diagonal(cells):
     elif x_count == 3:
         return "X"
 
+
 def validate_win_scenarios(tic_tac_toe, input_cells):
     if (check_row(tic_tac_toe) == check_column(tic_tac_toe) == check_diagonal(tic_tac_toe) is None and
             check_anti_diagonal(tic_tac_toe) is None and input_cells.count("X") + input_cells.count("O") == 9):
@@ -91,10 +95,40 @@ def validate_win_scenarios(tic_tac_toe, input_cells):
         print("Impossible")
 
 
+def first_move(board):
+    x, y = 0, 0
+    run = True
+    while run:
+        str_input = input("Enter the coordinates:")
+        if str_input[0] in ascii_letters:
+            print("You should enter numbers!")
+            continue
+        else:
+            x, y = map(int, str_input.split(" "))
+            if x < 0 or x > 3 or y > 3 or y < 0:
+                print("Coordinates should be from 1 to 3!")
+                continue
+            else:
+                i = 3 - y
+                j = x - 1
+                if board[i][j] == "_":
+                    # board[i][j] = "X"
+                    board[i] = ["X" if n == j else board[i][n] for n, row in enumerate(board[i]) ]
+                    run = False
+                    return board
+                else:
+                    print("This cell is occupied! Choose another one!")
+                    continue
+
+def print_board(board):
+    print("---------")
+    for k in range(len(board)):
+        print("|", *board[k], "|", sep=" ")
+    print("---------")
 input_cell = input("Enter cells:")
 tic_tac_toe = [input_cell[n:n + 3] for n, row in enumerate(input_cell) if n % 3 == 0]
-print("---------")
-for k in range(len(tic_tac_toe)):
-    print("|", *tic_tac_toe[k], "|", sep=" ")
-print("---------")
-validate_win_scenarios(tic_tac_toe, input_cell)
+print_board(tic_tac_toe)
+# validate_win_scenarios(tic_tac_toe, input_cell)
+modified_board = first_move(tic_tac_toe)
+print_board(modified_board)
+
